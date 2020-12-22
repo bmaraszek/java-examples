@@ -2,6 +2,8 @@ package pl.bmaraszek;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -10,6 +12,15 @@ public class App {
         System.out.println("Hello world!");
         App app = new App();
         app.readFile("resources.csv");
+
+        LinkedList<String> list = new LinkedList<>();
+        list.addFirst("a");
+        list.addFirst("b");
+        list.addLast("y");
+        list.addLast("z");
+
+        System.out.println(list.getFirst());
+        System.out.println(list.getLast());
     }
 
     public void readFile(String fileName){
