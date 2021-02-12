@@ -20,16 +20,18 @@ public class BartMaraszek {
         List<String> tokens = new LinkedList<>(Arrays.asList(str.split(";")));
         while(tokens.size() > 1) {
             int longestOverlap = -1;
-            int indexOfLongestOverlap = -1;
-            for(int i = 1; i < tokens.size(); i++) {
-                int currentOverlap = getLongestOverlapLengthBetween(tokens.get(0), tokens.get(i));
-                if(currentOverlap > longestOverlap) {
-                    longestOverlap = currentOverlap;
-                    indexOfLongestOverlap = i;
+            int[] pairWithLongestOverlap = new int[]{-1, -1};
+            for(int i = 0; i < tokens.size() - 1; i++) {
+                for(int j = i + 1; j < tokens.size(); j ++) {
+                    int currentOverlap = getLongestOverlapLengthBetween(tokens.get(i), tokens.get(j));
+                    if(currentOverlap > longestOverlap) {
+                        longestOverlap = currentOverlap;
+                        pairWithLongestOverlap = new int[]{i, j};
+                    }
                 }
             }
-            tokens.set(0, merge(tokens.get(0), tokens.get(indexOfLongestOverlap), longestOverlap));
-            tokens.remove(indexOfLongestOverlap);
+            tokens.set(pairWithLongestOverlap[0], merge(tokens.get(pairWithLongestOverlap[0]), tokens.get(pairWithLongestOverlap[1]), longestOverlap));
+            tokens.remove(pairWithLongestOverlap[1]);
         }
         return tokens.get(0);
     }
