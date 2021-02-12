@@ -25,6 +25,11 @@ public class ThreadFactoryExample {
     }
 }
 
+/**
+ * A ThreadFactory can limit the number of threads (pool),
+ * add custom names, validation, and stats.
+ * It can also return a custom implementation of a Thread class.
+ */
 class MyThreadFactory implements ThreadFactory {
 
     private int counter;
