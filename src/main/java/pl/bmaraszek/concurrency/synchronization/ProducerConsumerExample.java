@@ -18,6 +18,15 @@ public class ProducerConsumerExample {
     }
 }
 
+/**
+ * Both wait() and notify() must be called inside a synchronized block or a Monitor Exception is thrown
+ * wait() needs to be called in a loop
+ * if synchronizing on a lock, it's:
+ *
+ * synchronized(lock) {
+ *     while(condition) lock.wait();
+ * }
+ */
 class EventStorage {
     private int maxSize;
     private Queue<Date> storage;
