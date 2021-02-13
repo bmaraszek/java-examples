@@ -63,7 +63,7 @@ class PrintQueue {
     }
 
     public void printJob(Object document) {
-        queueLock.lock();
+        queueLock.lock(); // also tryLock(): boolean
         try {
             simulatePrint();
         } finally {
