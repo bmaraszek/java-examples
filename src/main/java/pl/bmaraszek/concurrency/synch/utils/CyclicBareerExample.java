@@ -18,6 +18,8 @@ import java.util.concurrent.CyclicBarrier;
  * A CyclicBarrier can be in a special state denoted by the broken state. When a thread waiting in the await() method
  * is interrupted, it receives an InterruptedException and other threads receive a BrokenBarrierException.
  * The CyclicBarrier is then placed in a broken state that can be checked using the isBroken() method.
+ *
+ * Because of the waiting mechanism and executing a callback, this is useful for writing tests for concurrent code.
  */
 public class CyclicBareerExample {
     public static void main(String[] args) {
