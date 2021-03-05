@@ -13,38 +13,38 @@ import java.util.function.Supplier;
 
 /**
  * Generate Seed -> Generate Number List -> async(step1 | step2 | step3) -> end
- *
+ * <p>
  * step1 will calculate the nearset number to 1,000 in a list of random numbers
  * step2 will calculate the biggest number in a list of random numbers
  * step3 will calculcate the average number between the largest and smallest number in a list of random numbers
- *
+ * <p>
  * We can use CompletableFuture with 2 main purposes:
  * - wait for a value or an event with complete() and get() (throws checked exceptions), or join() (doesn't throw) methods
  * - organize a set of tasks that won't start their execution until others have finished their execution
- *
+ * <p>
  * calling get() blocks the current thread until the Future completes.
- *
+ * <p>
  * CompletableFuture.supplyAsync(Supplier s) creates a Future that returns the result of s.get()
  * Each and every function in future.thenApplyAsync(T input) will receive the result of s.get() as a param
- *
+ * <p>
  * calling CompletableFuture.allOf(CompletableFuture... args) returns a Future that will be completed when all the Futures
  * passed as params are completed.
- *
+ * <p>
  * future.thenAcceptAsync(Consumer c) executes the consumer when the future is completed.
- *
+ * <p>
  * Different ways to complete a Future:
- *  - cancel() - throws a CancellationException
- *  - completeAsync() - completes with the result of a supplier object passed as param. The suppler is executed in a separate thread.
- *  - completeExceptionally() - throws exception passed as param
- *
+ * - cancel() - throws a CancellationException
+ * - completeAsync() - completes with the result of a supplier object passed as param. The suppler is executed in a separate thread.
+ * - completeExceptionally() - throws exception passed as param
+ * <p>
  * Different synchronization methods:
- *  - anyOf() - completes with the result of the first Future completed
- *  - runAfterBothAsync() - receives a CompletionStage and a Runnable. Runs the Runnable when Future and CompletionStage finish.
- *  - runAfterEither() - similar but runs a Runnable after either Future or CompletionStage finish
- *  - thenRunAsync() - similar to thenAcceptAsync(0 but it receives a Runnable instead of a Consumer
- *
+ * - anyOf() - completes with the result of the first Future completed
+ * - runAfterBothAsync() - receives a CompletionStage and a Runnable. Runs the Runnable when Future and CompletionStage finish.
+ * - runAfterEither() - similar but runs a Runnable after either Future or CompletionStage finish
+ * - thenRunAsync() - similar to thenAcceptAsync(0 but it receives a Runnable instead of a Consumer
+ * <p>
  * Obtain a value:
- *  - getNow) - returns the completion value OR the value passed as param if not completed
+ * - getNow) - returns the completion value OR the value passed as param if not completed
  */
 public class CompletableFutureExample {
     public static void main(String[] args) {
@@ -72,9 +72,9 @@ public class CompletableFutureExample {
             long selected = 0;
             long selectedDistance = Long.MAX_VALUE;
             long distance;
-            for(Long number : list) {
+            for (Long number : list) {
                 distance = Math.abs(number - 1_000);
-                if(distance < selectedDistance) {
+                if (distance < selectedDistance) {
                     selected = number;
                     selectedDistance = distance;
                 }
@@ -129,7 +129,7 @@ class NumberListGenerator implements Supplier<List<Long>> {
         List<Long> ret = new ArrayList<>();
         System.out.printf("%s: NumberListGenerator: Start\n", Thread.currentThread().getName());
 
-        for(int i = 0; i < size * 1_000_000; i++) {
+        for (int i = 0; i < size * 1_000_000; i++) {
             long number = Math.round(Math.random() * Long.MAX_VALUE);
             ret.add(number);
         }
@@ -145,7 +145,7 @@ class NumberSelector implements Function<List<Long>, Long> {
         System.out.printf("%s: Step 3: Start\n", Thread.currentThread().getName());
         long max = list.stream().max(Long::compare).get();
         long min = list.stream().min(Long::compare).get();
-        long result = (max+min) / 2;
+        long result = (max + min) / 2;
         System.out.printf("%s: Step 3: Result - %d\n", Thread.currentThread().getName(), result);
         return result;
     }
