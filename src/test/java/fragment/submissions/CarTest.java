@@ -2,7 +2,7 @@ package fragment.submissions;
 
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import pl.bmaraszek.Car;
+import leetcode.examples.Car;
 
 public class CarTest {
 
