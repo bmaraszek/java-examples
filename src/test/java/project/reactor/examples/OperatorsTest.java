@@ -1,7 +1,9 @@
 package project.reactor.examples;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 public class OperatorsTest {
@@ -34,6 +36,15 @@ public class OperatorsTest {
     StepVerifier.create(names)
         .expectNext("L", "U", "K", "E", "L", "E", "I", "A", "H", "A", "N") // fail!
         //.expectNextCount(11)
+        .verifyComplete();
+  }
+
+  @Test
+  public void testMonoFlatMap() {
+    Mono<List<String>> listMono = subject.namesMonoFlatMap(3);
+
+    StepVerifier.create(listMono)
+        .expectNext(List.of("L", "U", "K", "E"))
         .verifyComplete();
   }
 }

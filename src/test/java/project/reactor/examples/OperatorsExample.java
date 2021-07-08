@@ -6,6 +6,7 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class OperatorsExample {
   private static final Logger log = LoggerFactory.getLogger(OperatorsExample.class);
@@ -32,6 +33,13 @@ public class OperatorsExample {
         .log();
   }
 
+  /**
+   * concatMap vs flatMap:
+   * flatMap uses the merge opeartor and concatMap uses concatenation
+   * as a result, concatMap preserves the order of elements -> see test
+   * There's a 10ms delay before emitting each element and flatMap will be faster
+   * because it's executed in parallel -> compare flatMapSequential
+   */
   public Flux<String> concatMap() {
     log.info("concatMap()");
     return Flux.fromIterable(List.of("Luke", "Leia", "Han"))
@@ -41,6 +49,13 @@ public class OperatorsExample {
         .log();
   }
 
+  public Mono<List<String>> namesMonoFlatMap(int stringLength) {
+    return Mono.just("luke")
+        .map(String::toUpperCase)
+        .filter(n -> n.length() > stringLength)
+        .flatMap(this::splitStringMono);
+  }
+
   public Flux<String> splitString(String name) {
     var charArray = name.split("");
     return Flux.fromArray(charArray);
@@ -48,7 +63,12 @@ public class OperatorsExample {
 
   public Flux<String> splitStringWithDelay(String name) {
     var charArray = name.split("");
-    var rand = new Random().nextInt(10);
-    return Flux.fromArray(charArray).delayElements(Duration.ofMillis(rand));
+    return Flux.fromArray(charArray).delayElements(Duration.ofMillis(10));
+  }
+
+  public Mono<List<String>> splitStringMono(String s) {
+    String[] charArray = s.split("");
+    List<String> charList = List.of(charArray);
+    return Mono.just(charList);
   }
 }
