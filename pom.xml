@@ -94,12 +94,25 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+<!--        Logback-classic module requires the presence of slf4j-api.jar and logback-core.jar -->
+<!--        in addition to logback-classic.jar on the classpath.-->
+<!--        http://logback.qos.ch/manual/introduction.html-->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
-<!--            <scope>test</scope>-->
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
         </dependency>
 
         <!-- PROJECT REACTOR -->
