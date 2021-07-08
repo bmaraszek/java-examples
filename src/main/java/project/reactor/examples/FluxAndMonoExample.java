@@ -12,11 +12,13 @@ public class FluxAndMonoExample {
 
     public Flux<String> namesFlux() {
         log.info("Returning a new Flux");
-        return Flux.fromIterable(List.of("alex", "ben", "chloe"));
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+            .log(); // log all events
     }
 
     public Mono<String> nameMono() {
-        return Mono.just("alice");
+        return Mono.just("alice")
+            .log();
     }
 
     public static void main(String[] args) {
