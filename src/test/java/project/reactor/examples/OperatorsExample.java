@@ -32,6 +32,15 @@ public class OperatorsExample {
         .log();
   }
 
+  public Flux<String> concatMap() {
+    log.info("concatMap()");
+    return Flux.fromIterable(List.of("Luke", "Leia", "Han"))
+        .map(String::toUpperCase)
+        // LUKE, LEIA, HAN -> L, U, K, E, L, E, I, A, H, A, N
+        .concatMap(s -> splitStringWithDelay(s))
+        .log();
+  }
+
   public Flux<String> splitString(String name) {
     var charArray = name.split("");
     return Flux.fromArray(charArray);
@@ -39,7 +48,7 @@ public class OperatorsExample {
 
   public Flux<String> splitStringWithDelay(String name) {
     var charArray = name.split("");
-    var rand = new Random().nextInt(1000);
+    var rand = new Random().nextInt(10);
     return Flux.fromArray(charArray).delayElements(Duration.ofMillis(rand));
   }
 }

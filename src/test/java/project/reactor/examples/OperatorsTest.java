@@ -26,4 +26,14 @@ public class OperatorsTest {
         .expectNextCount(11) // look at the random order
         .verifyComplete();
   }
+
+  @Test
+  public void testConcatMap() {
+    Flux<String> names = subject.concatMap();
+
+    StepVerifier.create(names)
+        .expectNext("L", "U", "K", "E", "L", "E", "I", "A", "H", "A", "N") // fail!
+        //.expectNextCount(11)
+        .verifyComplete();
+  }
 }
