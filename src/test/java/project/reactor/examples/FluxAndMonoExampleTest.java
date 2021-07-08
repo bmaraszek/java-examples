@@ -1,6 +1,7 @@
 package project.reactor.examples;
 
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 public class FluxAndMonoExampleTest {
@@ -9,8 +10,6 @@ public class FluxAndMonoExampleTest {
 
   @Test
   public void namesFlux() {
-    // given
-
     // when
     var namesFlux = subject.namesFlux();
 
@@ -18,7 +17,7 @@ public class FluxAndMonoExampleTest {
     StepVerifier.create(namesFlux)
         //.expectNextCount(3) this consumes an element, so this could be:
         //.expectNext("alex").expectNext(2)
-        .expectNext("alex", "ben", "chloe")
+        .expectNext("luke", "leia", "han")
         .verifyComplete();
   }
 
@@ -28,7 +27,16 @@ public class FluxAndMonoExampleTest {
     var namesFlux = subject.namesFluxMap();
 
     StepVerifier.create(namesFlux)
-        .expectNext("ALEX", "BEN", "CHLOE")
+        .expectNext("LUKE", "LEIA", "HAN")
+        .verifyComplete();
+  }
+
+  @Test
+  public void testImmutable() {
+    Flux<String> namesFlux = subject.namesFluxImmutable();
+
+    StepVerifier.create(namesFlux)
+        .expectNext("luke", "leia", "han")
         .verifyComplete();
   }
 }

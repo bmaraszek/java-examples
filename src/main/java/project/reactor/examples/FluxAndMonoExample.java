@@ -12,7 +12,7 @@ public class FluxAndMonoExample {
 
     public Flux<String> namesFlux() {
         log.info("Returning a new Flux");
-        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+        return Flux.fromIterable(List.of("luke", "leia", "han"))
             .log(); // log all events
     }
 
@@ -22,9 +22,15 @@ public class FluxAndMonoExample {
     }
 
     public Flux<String> namesFluxMap() {
-        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+        return Flux.fromIterable(List.of("luke", "leia", "han"))
             .map(String::toUpperCase)
             .log();
+    }
+
+    public Flux<String>  namesFluxImmutable() {
+        Flux<String> namesFlux = Flux.fromIterable(List.of("luke", "leia", "han"));
+        namesFlux.map(String::toUpperCase);
+        return namesFlux; // immutable!
     }
 
     public static void main(String[] args) {
