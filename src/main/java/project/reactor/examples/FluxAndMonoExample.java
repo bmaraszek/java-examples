@@ -21,6 +21,12 @@ public class FluxAndMonoExample {
             .log();
     }
 
+    public Flux<String> namesFluxMap() {
+        return Flux.fromIterable(List.of("alex", "ben", "chloe"))
+            .map(String::toUpperCase)
+            .log();
+    }
+
     public static void main(String[] args) {
         FluxAndMonoExample f = new FluxAndMonoExample();
         f.namesFlux().subscribe(

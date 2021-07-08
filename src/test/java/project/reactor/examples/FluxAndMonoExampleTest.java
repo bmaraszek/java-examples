@@ -21,4 +21,14 @@ public class FluxAndMonoExampleTest {
         .expectNext("alex", "ben", "chloe")
         .verifyComplete();
   }
+
+  @Test
+  public void namesMapFlux() {
+
+    var namesFlux = subject.namesFluxMap();
+
+    StepVerifier.create(namesFlux)
+        .expectNext("ALEX", "BEN", "CHLOE")
+        .verifyComplete();
+  }
 }
