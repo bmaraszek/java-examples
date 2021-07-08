@@ -16,4 +16,14 @@ public class OperatorsTest {
         .expectNext("L", "U", "K", "E", "L", "E", "I", "A", "H", "A", "N")
         .verifyComplete();
   }
+
+  @Test
+  public void testFlatMapAsync() {
+    Flux<String> names = subject.flatMapAsync();
+
+    StepVerifier.create(names)
+        //.expectNext("L", "U", "K", "E", "L", "E", "I", "A", "H", "A", "N") // fail!
+        .expectNextCount(11) // look at the random order
+        .verifyComplete();
+  }
 }

@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * Both a Flux and a Mono is a Publisher
+ */
 public class FluxAndMonoExample {
 
     private static final Logger log = LoggerFactory.getLogger(FluxAndMonoExample.class);
