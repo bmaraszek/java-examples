@@ -56,4 +56,32 @@ public class OperatorsExampleTest {
         .expectNext("L", "U", "K", "E")
         .verifyComplete();
   }
+
+  @Test
+  public void testTransform() {
+    var value = subject.transform(3);
+
+    StepVerifier.create(value)
+        .expectNext("L", "U", "K", "E", "L", "E", "I", "A")
+        .verifyComplete();
+  }
+
+  @Test
+  public void testDefaultValue() {
+    var value = subject.namesFluxDefaultIfEmpty(10);
+
+    StepVerifier.create(value)
+        .expectNext("default")
+        .verifyComplete();
+  }
+
+  @Test
+  public void testSwitchIfEmpty() {
+    var value = subject.namesFluxSwitchIfEmpty(5);
+
+    StepVerifier.create(value)
+        .expectNext("D", "E", "F", "A", "U", "L", "T")
+        .verifyComplete();
+  }
+
 }
