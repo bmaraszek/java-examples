@@ -2,7 +2,6 @@ package project.reactor.examples;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
@@ -49,11 +48,24 @@ public class OperatorsExample {
         .log();
   }
 
+  /**
+   * One use case for flatMap is a function that returns a Mono of a Collection, like below
+   */
   public Mono<List<String>> namesMonoFlatMap(int stringLength) {
     return Mono.just("luke")
         .map(String::toUpperCase)
         .filter(n -> n.length() > stringLength)
         .flatMap(this::splitStringMono);
+  }
+
+  /**
+   * A use case for flatMapMany() is turning a function returning Mono<T> into Flux<T>
+   */
+  public Flux<String> namesMonoFlatMapMany(int stringLength) {
+    return Mono.just("luke")
+        .map(String::toUpperCase)
+        .filter(n -> n.length() > stringLength)
+        .flatMapMany(this::splitString);
   }
 
   public Flux<String> splitString(String name) {

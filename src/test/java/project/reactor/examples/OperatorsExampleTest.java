@@ -47,4 +47,13 @@ public class OperatorsExampleTest {
         .expectNext(List.of("L", "U", "K", "E"))
         .verifyComplete();
   }
+
+  @Test
+  public void testflatMapMany() {
+    var value = subject.namesMonoFlatMapMany(3);
+
+    StepVerifier.create(value)
+        .expectNext("L", "U", "K", "E")
+        .verifyComplete();
+  }
 }
