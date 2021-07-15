@@ -15,21 +15,21 @@ public class CombinatorsExample {
   //
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public Flux<String> exploreConcat() {
+  public Flux<String> concat() {
     var abcFlux = Flux.just("A", "B", "C");
     var defFlux = Flux.just("D", "E", "F");
 
     return Flux.concat(abcFlux, defFlux).log();
   }
 
-  public Flux<String> exploreConcatWith() {
+  public Flux<String> concatWith() {
     var abcFlux = Flux.just("A", "B", "C");
     var defFlux = Flux.just("D", "E", "F");
 
     return abcFlux.concatWith(defFlux).log();
   }
 
-  public Flux<String> exploreMonoConcatWith() {
+  public Flux<String> concatWithMono() {
     var aMono = Mono.just("A");
     var bMono = Mono.just("B");
 
@@ -45,7 +45,7 @@ public class CombinatorsExample {
   //
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public Flux<String> exploreMerge() {
+  public Flux<String> merge() {
     var abcFlux = Flux.just("A", "B", "C", "D", "E", "F")
         .delayElements(Duration.ofMillis(35));
 
@@ -58,11 +58,28 @@ public class CombinatorsExample {
     return Flux.merge(abcFlux, defFlux).log();
   }
 
-  public Flux<String> exploreMergeMono() {
+  public Flux<String> mergeMono() {
     var aMono = Mono.just("A");
     var bMono = Mono.just("B");
 
     return aMono.mergeWith(bMono).log();
   }
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  //  Using mergeSequential() combines two Publishers into one.
+  //    - Both Publishers are subscribed at the same time
+  //    - Publishers are subscribed eagerly
+  //
+  //  mergeSequential() - static method in Flux
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public Flux<String> mergeSequential() {
+    var abcFlux = Flux.just("A", "B", "C");
+    var defFlux = Flux.just("D", "E", "F");
+
+    // subscription occurs at the same time but the result is sequential
+    return Flux.mergeSequential(abcFlux, defFlux).log();
+  }
 }

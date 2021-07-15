@@ -15,7 +15,7 @@ public class CombinatorsExampleTest {
 
   @Test
   public void shouldConcat() {
-    var flux = subject.exploreConcat();
+    var flux = subject.concat();
 
     StepVerifier.create(flux)
         .expectNext("A", "B", "C", "D", "E", "F")
@@ -24,7 +24,7 @@ public class CombinatorsExampleTest {
 
   @Test
   public void shouldConcatWith() {
-    var flux = subject.exploreConcatWith();
+    var flux = subject.concatWith();
 
     StepVerifier.create(flux)
         .expectNext("A", "B", "C", "D", "E", "F")
@@ -33,7 +33,7 @@ public class CombinatorsExampleTest {
 
   @Test
   public void shouldConcatMonoWith() {
-    var flux = subject.exploreMonoConcatWith();
+    var flux = subject.concatWithMono();
 
     StepVerifier.create(flux)
         .expectNext("A", "B")
@@ -42,7 +42,7 @@ public class CombinatorsExampleTest {
 
   @Test
   public void shouldMergeFlux() {
-    var flux = subject.exploreMerge();
+    var flux = subject.merge();
 
     StepVerifier.create(flux)
         .expectNext("A", "B", "G", "C", "D", "E", "H", "F", "I", "J")
@@ -51,10 +51,19 @@ public class CombinatorsExampleTest {
 
   @Test
   public void shouldMergeMono() {
-    var flux = subject.exploreMergeMono();
+    var flux = subject.mergeMono();
 
     StepVerifier.create(flux)
         .expectNext("A", "B")
+        .verifyComplete();
+  }
+
+  @Test
+  public void shouldMergeSequential() {
+    var flux = subject.mergeSequential();
+
+    StepVerifier.create(flux)
+        .expectNext("A", "B", "C", "D", "E", "F")
         .verifyComplete();
   }
 }
