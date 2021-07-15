@@ -1,17 +1,15 @@
 package project.reactor.examples;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
  * Both a Flux and a Mono is a Publisher
  */
+@Slf4j
 public class FluxAndMonoExample {
-
-    private static final Logger log = LoggerFactory.getLogger(FluxAndMonoExample.class);
 
     public Flux<String> namesFlux() {
         log.info("Returning a new Flux");
