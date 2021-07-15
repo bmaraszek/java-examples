@@ -66,4 +66,40 @@ public class CombinatorsExampleTest {
         .expectNext("A", "B", "C", "D", "E", "F")
         .verifyComplete();
   }
+
+  @Test
+  public void shouldZip() {
+    var flux = subject.zip();
+
+    StepVerifier.create(flux)
+        .expectNext("A-D", "B-E", "C-F")
+        .verifyComplete();
+  }
+
+  @Test
+  public void shouldZip4() {
+    var flux = subject.zip4();
+
+    StepVerifier.create(flux)
+        .expectNext("AD14", "BE25", "CF36")
+        .verifyComplete();
+  }
+
+  @Test
+  public void shouldZipFluxWithMono() {
+    var flux = subject.zipFluxWithMono();
+
+    StepVerifier.create(flux)
+        .expectNext("B-A")
+        .verifyComplete();
+  }
+
+  @Test
+  public void shouldZipMonoWithMono() {
+    var mono = subject.zipMonoWithMono();
+
+    StepVerifier.create(mono)
+        .expectNext("A-B")
+        .verifyComplete();
+  }
 }
