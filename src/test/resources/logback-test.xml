@@ -13,17 +13,32 @@
 
 <configuration debug="false" scan="true">
 
+    <!--
+    Console appender for normal logging
+    -->
     <appender name="STDOUT" target="System.out" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
+    <root level="TRACE">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <!--
+    Static appender for testing logs (can assert on its contents)
+    -->
+    <appender name="static-appender" class="utils.StaticAppender"/>
+
+    <root level="TRACE">
+        <appender-ref ref="static-appender"/>
+    </root>
+
+    <!--
+    Set Logger Levels for specific packages
+    -->
     <logger name="project.reactor.examples" level="DEBUG"/>
     <logger name="udemy.learnreactiveprogramming" level="DEBUG"/>
-
-    <root level="INFO">
-        <appender-ref ref="STDOUT" />
-    </root>
 
 </configuration>
