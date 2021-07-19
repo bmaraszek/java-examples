@@ -30,6 +30,15 @@ public class DoOnCallbacksExample {
         .doOnNext(name -> {
           log.debug("doOnNext(): {}", name);
         })
+        .doOnSubscribe(subscription -> {
+          log.debug("Subscription is: {}", subscription);
+        })
+        .doOnComplete(() -> {
+          log.debug("onComplete()");
+        })
+        .doFinally(signal -> {
+          log.debug("onFinally(): singalType is: {}", signal.name());
+        })
         .log();
   }
 }
