@@ -2,20 +2,22 @@ package udemy.learnreactiveprogramming.service;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import udemy.learnreactiveprogramming.domain.Movie;
 import udemy.learnreactiveprogramming.domain.Review;
+import udemy.learnreactiveprogramming.exception.MovieException;
 
 @AllArgsConstructor
+@Slf4j
 public class MovieReactiveService {
 
   private MovieInfoService movieInfoService;
   private ReviewService reviewService;
 
   public Flux<Movie> getAllMovies() {
-    var moviesInfoFlux = movieInfoService.retrieveMoviesFlux();
-    Flux<Movie> movieFlux = moviesInfoFlux
+    return movieInfoService.retrieveMoviesFlux()
         // when we have a Rx type and want to return antoher Rx type, use flatMap()
         .flatMap(movieInfo -> {
           Mono<List<Review>> reviewsMono = reviewService
@@ -25,8 +27,11 @@ public class MovieReactiveService {
               .map(reviewList -> new Movie(movieInfo, reviewList));
 
           return movieMono;
+        })
+        .onErrorMap((ex) -> {
+          log.error("Error while retrieving a movie", ex);
+          return new MovieException(ex);
         });
-    return movieFlux;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
