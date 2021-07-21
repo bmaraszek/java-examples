@@ -158,4 +158,66 @@ public class MovieReactiveService {
             Exceptions.propagate(retrySignal.failure())
         );
   }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  //  repeat() is used to repeat an existing sequence.
+  //  This operator is invoked after the onCompletion() event from the existing sequence.
+  //  Use it when you have an use-case to subscribe to the same publisher again.
+  //  This opeartor works as long as NO EXCEPTION is thrown.
+  //
+  //  repeat(long n) will repeat n times.
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public Flux<Movie> getAllMoviesRepeat(int maxRetries) {
+    return movieInfoService.retrieveMoviesFlux()
+        // when we have a Rx type and want to return antoher Rx type, use flatMap()
+        .flatMap(movieInfo -> {
+          Mono<List<Review>> reviewsMono = reviewService
+              .retrieveReviewsFlux(movieInfo.getMovieInfoId())
+              .collectList();
+          Mono<Movie> movieMono = reviewsMono
+              .map(reviewList -> new Movie(movieInfo, reviewList));
+
+          return movieMono;
+        })
+        .onErrorMap((ex) -> {
+          log.error("Error while retrieving a movie {}", ex.getMessage());
+          if (ex instanceof NetworkException) {
+            return new MovieException(ex.getMessage());
+          } else {
+            return new ServiceException(ex.getMessage());
+          }
+        })
+        .retryWhen(getBackoff(maxRetries))
+        .repeat() // repeats indifinitely
+        .log();
+  }
+
+  public Flux<Movie> getAllMoviesRepeatNTimes(int repeatCount) {
+    return movieInfoService.retrieveMoviesFlux()
+        // when we have a Rx type and want to return antoher Rx type, use flatMap()
+        .flatMap(movieInfo -> {
+          Mono<List<Review>> reviewsMono = reviewService
+              .retrieveReviewsFlux(movieInfo.getMovieInfoId())
+              .collectList();
+          Mono<Movie> movieMono = reviewsMono
+              .map(reviewList -> new Movie(movieInfo, reviewList));
+
+          return movieMono;
+        })
+        .onErrorMap((ex) -> {
+          log.error("Error while retrieving a movie {}", ex.getMessage());
+          if (ex instanceof NetworkException) {
+            return new MovieException(ex.getMessage());
+          } else {
+            return new ServiceException(ex.getMessage());
+          }
+        })
+        .retryWhen(getBackoff(3))
+        .repeat(repeatCount) // repeats indifinitely
+        .log();
+  }
+
 }

@@ -150,4 +150,43 @@ class MovieRactiveServiceMockTest {
 
     verify(reviewService, times(4)).retrieveReviewsFlux(isA(Long.class));
   }
+
+  @Test
+  @DisplayName("Should repeat the sequence")
+  void shouldRepeatTheSequence() {
+    // given
+    subject = Mockito.spy(subject);
+    when(movieInfoService.retrieveMoviesFlux()).thenCallRealMethod();
+    when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
+
+    // when
+    var moviesFlux = subject.getAllMoviesRepeat(3);
+
+    // then
+    StepVerifier.create(moviesFlux)
+        .expectNextCount(6)
+        .thenCancel() // you can cancel a subscription from the test case itself
+        .verify();
+
+    verify(reviewService, times(6)).retrieveReviewsFlux(isA(Long.class));
+  }
+
+  @Test
+  @DisplayName("Should repeat the sequence N times")
+  void shouldRepeatTheSequenceNTimes() {
+    // given
+    subject = Mockito.spy(subject);
+    when(movieInfoService.retrieveMoviesFlux()).thenCallRealMethod();
+    when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
+
+    // when
+    var moviesFlux = subject.getAllMoviesRepeatNTimes(3);
+
+    // then
+    StepVerifier.create(moviesFlux)
+        .expectNextCount(12)  // there are 3 movies returned, and we repeat 3 MORE TIMES
+        .verifyComplete();
+
+    verify(reviewService, times(12)).retrieveReviewsFlux(isA(Long.class));
+  }
 }
