@@ -4,14 +4,16 @@ import static udemy.learnreactiveprogramming.util.CommonUtil.delay;
 
 import java.time.LocalDate;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import udemy.learnreactiveprogramming.domain.MovieInfo;
 
+@Slf4j
 public class MovieInfoService {
 
   public Flux<MovieInfo> retrieveMoviesFlux() {
-
+    log.debug("MovieInfoService.retrieveMoviesFlux()");
     var movieInfoList = List.of(
         new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"),
             LocalDate.parse("2005-06-15")),
@@ -24,7 +26,7 @@ public class MovieInfoService {
   }
 
   public Mono<MovieInfo> retrieveMovieInfoMonoUsingId(long movieId) {
-
+    log.debug("MovieInfoService.retrieveMovieInfoMonoUsingId({})", movieId);
     var movie =
         new MovieInfo(movieId, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"),
             LocalDate.parse("2005-06-15"));
@@ -45,6 +47,7 @@ public class MovieInfoService {
   }
 
   public MovieInfo retrieveMovieUsingId(long movieId) {
+    log.debug("MovieInfoService.retrieveMovieUsingId({})", movieId);
     delay(1000);
     return new MovieInfo(movieId, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"),
         LocalDate.parse("2005-06-15"));
