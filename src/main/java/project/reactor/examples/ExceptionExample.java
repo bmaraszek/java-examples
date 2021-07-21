@@ -2,6 +2,7 @@ package project.reactor.examples;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
+import udemy.learnreactiveprogramming.exception.ReactorException;
 
 @Slf4j
 public class ExceptionExample {
@@ -27,12 +28,24 @@ public class ExceptionExample {
         .log();
   }
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // onErrorReturn: returns a single fallback value
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
   public Flux<String> onErrorReturn() {
     return Flux.just("A", "B", "C")
         .concatWith(Flux.error(new IllegalStateException("Exception Occurred")))
         .onErrorReturn("Fallback value")
         .log();
   }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // onErrorResume: returns a fallback Publisher (Flux or Mono)
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////
 
   public Flux<String> onErrorResume(Exception exception) {
 
@@ -51,10 +64,14 @@ public class ExceptionExample {
         .log();
   }
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // onErrorContinue:
+  // drop the element causing the exception and continue emitting the remaining elems
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
   public Flux<String> onErrorContinue() {
-
-    // drop the element causing the exception and continue emitting the remaining elems
-
     return Flux.just("A", "B", "C")
         .map(name -> {
           if (name.equals("B")) {
@@ -65,6 +82,54 @@ public class ExceptionExample {
         .onErrorContinue((ex, name) -> {
           log.error("Exception is: ", ex);
           log.info("Name is {}", name);
+        })
+        .log();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // onErrorMap: map stream exceptions to business exceptions and send it to the caller.
+  // It does not recover from the exception. The flow completes after this.
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public Flux<String> onErrorMap() {
+    return Flux.just("A", "B", "C")
+        .map(name -> {
+          if (name.equals("B")) {
+            throw new RuntimeException("Error!");
+          }
+          return name;
+        })
+        .onErrorMap(exception -> new ReactorException(exception, exception.getMessage()))
+        .log();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // doOnError: catches the exception, take an action when the Exception occurs.
+  // Does not modify the stream. The error is propagated to the caller.
+  // Similar to try/catch block like this:
+  //
+  //  try {
+  //    collaborator.action()
+  //  } catch (Exception e) {
+  //    logger.log("We've got a problem", e);
+  //    throw e;
+  //  }
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public Flux<String> doOnError() {
+    return Flux.just("A", "B", "C")
+        .map(name -> {
+          if (name.equals("B")) {
+            throw new RuntimeException("Error!");
+          }
+          return name;
+        })
+        .doOnError(ex -> {
+          log.error("We've got a problem!", ex);
         })
         .log();
   }

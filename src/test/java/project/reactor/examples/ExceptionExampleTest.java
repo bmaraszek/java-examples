@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
+import udemy.learnreactiveprogramming.exception.ReactorException;
 import utils.StaticAppender;
 
 public class ExceptionExampleTest {
@@ -70,5 +71,27 @@ public class ExceptionExampleTest {
     StepVerifier.create(flux)
         .expectNext("A", "C")
         .verifyComplete();
+  }
+
+  @Test
+  @DisplayName("Should map a stream exceptions to business exception")
+  public void shouldMapError() {
+    var flux = subject.onErrorMap();
+
+    StepVerifier.create(flux)
+        .expectNext("A")
+        .expectError(ReactorException.class)
+        .verify();
+  }
+
+  @Test
+  @DisplayName("Should run a task on error")
+  public void shouldDoOnError() {
+    var flux = subject.doOnError();
+
+    StepVerifier.create(flux)
+        .expectNext("A")
+        .expectError(RuntimeException.class)
+        .verify();
   }
 }
