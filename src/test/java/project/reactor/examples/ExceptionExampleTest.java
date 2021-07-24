@@ -94,4 +94,5 @@ public class ExceptionExampleTest {
         .expectError(RuntimeException.class)
         .verify();
   }
+
 }

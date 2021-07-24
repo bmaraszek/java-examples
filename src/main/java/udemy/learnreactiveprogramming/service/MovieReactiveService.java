@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import reactor.util.retry.Retry;
 import reactor.util.retry.RetryBackoffSpec;
 import udemy.learnreactiveprogramming.domain.Movie;
@@ -21,6 +22,9 @@ public class MovieReactiveService {
 
   private MovieInfoService movieInfoService;
   private ReviewService reviewService;
+  // this will be blocking
+  // it does not return a reactige type, just a plain java object
+  private RevenueService revenueService;
 
   public Flux<Movie> getAllMovies() {
     return movieInfoService.retrieveMoviesFlux()
@@ -74,6 +78,25 @@ public class MovieReactiveService {
 
     return movieInfoMono
         .zipWith(reviewFlux, (movieInfo, reviews) -> new Movie(movieInfo, reviews));
+  }
+
+  public Mono<Movie> getMovieByIdWithRevenue(long movieId) {
+    var movieInfoMono = movieInfoService.retrieveMovieInfoMonoUsingId(movieId);
+    var reviewFlux = reviewService
+        .retrieveReviewsFlux(movieId)
+        .collectList();
+
+    // revenueService.getRevenue(movieId) this is a blocking call!
+    var revenueMono = Mono.fromCallable(() -> revenueService.getRevenue(movieId))
+        .subscribeOn(Schedulers.boundedElastic());
+
+    return movieInfoMono
+        .zipWith(reviewFlux, (movieInfo, reviews) -> new Movie(movieInfo, reviews))
+        // we zip with another value
+        .zipWith(revenueMono, (movie, revenue) -> {
+          movie.setRevenue(revenue);
+          return movie;
+        });
   }
 
   public Mono<Movie> getMovieByIdFlatMap(long movieId) {

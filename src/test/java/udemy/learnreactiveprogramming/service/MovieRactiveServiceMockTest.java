@@ -1,5 +1,7 @@
 package udemy.learnreactiveprogramming.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
@@ -33,6 +35,9 @@ class MovieRactiveServiceMockTest {
   @Mock
   private ReviewService reviewService;
 
+  @Mock
+  private RevenueService revenueService;
+
   @Test
   @DisplayName("Should return movies when collaborators return results")
   void shouldThrowMovieException() {
@@ -46,6 +51,27 @@ class MovieRactiveServiceMockTest {
     // then
     StepVerifier.create(moviesFlux)
         .expectNextCount(3)
+        .verifyComplete();
+  }
+
+  @Test
+  @DisplayName("Should return a movie with revenue")
+  void shouldRetrunAMovieWithRevenue() {
+    // given
+    when(movieInfoService.retrieveMovieInfoMonoUsingId(anyLong())).thenCallRealMethod();
+    when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
+    when(revenueService.getRevenue(anyLong())).thenCallRealMethod();
+
+    // when
+    var moviesMono = subject.getMovieByIdWithRevenue(100L);
+
+    // then
+    StepVerifier.create(moviesMono)
+        .assertNext(movie -> {
+          assertEquals("Batman Begins", movie.getMovie().getName());
+          assertEquals(2, movie.getReviewList().size());
+          assertNotNull(movie.getRevenue());
+        })
         .verifyComplete();
   }
 

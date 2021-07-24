@@ -17,7 +17,9 @@ class MovieReactiveServiceTest {
 
   @BeforeEach
   void setUp() {
-    subject = new MovieReactiveService(new MovieInfoService(), new ReviewService());
+    subject = new MovieReactiveService(
+        new MovieInfoService(), new ReviewService(), new RevenueService()
+    );
   }
 
   @AfterEach

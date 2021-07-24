@@ -22,8 +22,8 @@ public class SchedulersExample {
   //    - Schedulers.single():    is for one-off tasks that can be run on a unique ExecutorService
   //
   //    - Schedulers.parallel():  is good for CPU-intensive but short-lived tasks.
-  //
   //                              It executes N such tasks in parallel (default N == number of CPUs)
+  //
   //    - Schedulers.elastic():   and Schedulers.boundedElastic() are good for more long-lived tasks
   //                              (eg. blocking IO tasks). The elastic one spawns threads on-demand
   //                              without a limit while the recently introduced boundedElastic does
