@@ -36,7 +36,7 @@ public class OperatorsExample {
     return Flux.fromIterable(List.of("Luke", "Leia", "Han"))
         .map(String::toUpperCase)
         // LUKE, LEIA, HAN -> L, U, K, E, L, E, I, A, H, A, N
-        .flatMap(s -> splitStringWithDelay(s))
+        .flatMap(s -> splitStringWithDelay(s, Duration.ofMillis(10)))
         .log();
   }
 
@@ -52,7 +52,7 @@ public class OperatorsExample {
     return Flux.fromIterable(List.of("Luke", "Leia", "Han"))
         .map(String::toUpperCase)
         // LUKE, LEIA, HAN -> L, U, K, E, L, E, I, A, H, A, N
-        .concatMap(s -> splitStringWithDelay(s))
+        .concatMap(s -> splitStringWithDelay(s, Duration.ofMillis(10)))
         .log();
   }
 
@@ -81,10 +81,10 @@ public class OperatorsExample {
     return Flux.fromArray(charArray);
   }
 
-  public Flux<String> splitStringWithDelay(String name) {
+  public Flux<String> splitStringWithDelay(String name, Duration delay) {
     log.info("splitStringWithDelay({})", name);
     var charArray = name.split("");
-    return Flux.fromArray(charArray).delayElements(Duration.ofMillis(10));
+    return Flux.fromArray(charArray).delayElements(delay);
   }
 
   public Mono<List<String>> splitStringMono(String s) {

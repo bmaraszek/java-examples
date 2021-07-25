@@ -71,7 +71,7 @@ public class HotAndColdPublisherTest {
   }
 
   @Test
-  void refountTest() {
+  void refCount() {
     var flux = Flux.range(1, 5)
         .delayElements(Duration.ofMillis(100))
         .doOnCancel(() -> log.info("Received Cancel Signal"));

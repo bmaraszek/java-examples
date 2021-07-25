@@ -1,11 +1,11 @@
 package project.reactor.examples;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -35,7 +35,7 @@ public class UserExampleSnippet {
 
   public static Flux<String> getUserIds() {
     log.info("getUserIds()");
-    return Flux.fromIterable(Lists.list("abc123", "xyz123", "cde123"));
+    return Flux.fromIterable(List.of("abc123", "xyz123", "cde123"));
   }
 
   public static Mono<User> getUser(String userId) {
@@ -45,7 +45,7 @@ public class UserExampleSnippet {
 
   public static Flux<User> getUsers(String userId) {
     log.info("getUsers({})", userId);
-    return Flux.fromIterable(Lists.list(
+    return Flux.fromIterable(List.of(
         new User("abc123", "Frodo"),
         new User("xyz123", null),
         new User("cde123", "Sam")

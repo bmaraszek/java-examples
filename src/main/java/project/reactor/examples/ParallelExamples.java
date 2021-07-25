@@ -27,6 +27,12 @@ public class ParallelExamples {
   //
   //////////////////////////////////////////////////////////////////////////////////////////////////
 
+  public Flux<String> notParallel() {
+    return Flux.fromIterable(swNames)
+        .map(this::upperCase)
+        .log();
+  }
+
   public ParallelFlux<String> parallel() {
     return Flux.fromIterable(swNames)
         .parallel()
