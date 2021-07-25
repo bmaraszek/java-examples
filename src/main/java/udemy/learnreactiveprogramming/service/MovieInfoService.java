@@ -5,12 +5,38 @@ import static udemy.learnreactiveprogramming.util.CommonUtil.delay;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import udemy.learnreactiveprogramming.domain.MovieInfo;
 
 @Slf4j
 public class MovieInfoService {
+
+  private WebClient webClient;
+
+  public MovieInfoService() {
+  }
+
+  public MovieInfoService(WebClient webClient) {
+    this.webClient = webClient;
+  }
+
+  public Flux<MovieInfo> retrieveMoviesFluxWebClient() {
+    return webClient.get()
+        .uri("/v1/movie_infos")
+        .retrieve()
+        .bodyToFlux(MovieInfo.class)
+        .log();
+  }
+
+  public Mono<MovieInfo> retrieveMovieInfoByIdWebClient(Long movieInfoId) {
+    return webClient.get()
+        .uri("/v1/movie_infos/{id}", movieInfoId)
+        .retrieve()
+        .bodyToMono(MovieInfo.class)
+        .log();
+  }
 
   public Flux<MovieInfo> retrieveMoviesFlux() {
     log.debug("MovieInfoService.retrieveMoviesFlux()");
