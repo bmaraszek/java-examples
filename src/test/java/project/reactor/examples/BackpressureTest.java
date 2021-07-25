@@ -111,4 +111,128 @@ public class BackpressureTest {
 
     Assertions.assertTrue(latch.await(5L, TimeUnit.SECONDS));
   }
+
+  @Test
+  void shouldDoOnBackPressureDrop() throws InterruptedException {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  This operator will hold an internal queue where it stores the data.
+    //  This reduced the number of round-trips to the Publisher.
+    //  The operator drops the remaining elements that are not needed by the subscriber.
+    //  The operator helps to track the items that are not needed by the subscriber.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Flux<Integer> numberRange = Flux.range(1, 100).log();
+    CountDownLatch latch = new CountDownLatch(1);
+
+    numberRange.onBackpressureDrop(item -> {
+      log.info("Dropped items are: {}", item);
+    }).subscribe(new BaseSubscriber<>() {
+      @Override
+      protected void hookOnSubscribe(Subscription subscription) {
+        request(2);
+      }
+
+      @Override
+      protected void hookOnNext(Integer value) {
+        log.info("The value is: {}", value);
+        if (value == 2) {
+          hookOnCancel();
+        }
+      }
+
+      @Override
+      protected void hookOnCancel() {
+        log.info("inside onCancel");
+        latch.countDown();
+      }
+    });
+
+    Assertions.assertTrue(latch.await(5L, TimeUnit.SECONDS));
+  }
+
+  @Test
+  void onBackPressureBufferTest() throws InterruptedException {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  Similar to onBackPressureDrop() but buffers the unused elements instead of dropping.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Flux<Integer> numberRange = Flux.range(1, 100).log();
+    CountDownLatch latch = new CountDownLatch(1);
+
+    numberRange.onBackpressureBuffer(10, i -> {
+      log.info("Last buffer element is: {}", i);
+    })
+        .subscribe(new BaseSubscriber<>() {
+          @Override
+          protected void hookOnSubscribe(Subscription subscription) {
+            request(1);
+          }
+
+          @Override
+          protected void hookOnNext(Integer value) {
+            log.info("The value is: {}", value);
+            if (value < 50) {
+              request(1);
+            } else {
+              hookOnCancel();
+            }
+          }
+
+          @Override
+          protected void hookOnCancel() {
+            log.info("inside onCancel");
+            latch.countDown();
+          }
+        });
+
+    Assertions.assertTrue(latch.await(5L, TimeUnit.SECONDS));
+  }
+
+  @Test
+  void onBackPressureErrorTest() throws InterruptedException {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  Throws OverflowException when the publisher sends more data than the subscriber's requested
+    //  amount. Similar to other onBackPressureXYZ - it stores data in an internal queue.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Flux<Integer> numberRange = Flux.range(1, 100).log();
+    CountDownLatch latch = new CountDownLatch(1);
+
+    numberRange.onBackpressureError()
+        .subscribe(new BaseSubscriber<>() {
+          @Override
+          protected void hookOnSubscribe(Subscription subscription) {
+            request(1);
+          }
+
+          @Override
+          protected void hookOnNext(Integer value) {
+            log.info("The value is: {}", value);
+            if (value < 50) {
+              request(1);
+            } else {
+              hookOnCancel();
+            }
+          }
+
+          @Override
+          protected void hookOnCancel() {
+            log.info("inside onCancel");
+            latch.countDown();
+          }
+
+          @Override
+          protected void hookOnError(Throwable throwable) {
+            log.error("Error occurred: ", throwable);
+          }
+        });
+
+    Assertions.assertTrue(latch.await(5L, TimeUnit.SECONDS));
+  }
 }
