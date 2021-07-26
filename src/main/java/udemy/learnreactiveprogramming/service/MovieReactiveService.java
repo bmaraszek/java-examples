@@ -44,6 +44,24 @@ public class MovieReactiveService {
         });
   }
 
+  public Flux<Movie> getAllMoviesWebClient() {
+    return movieInfoService.retrieveMoviesFluxWebClient()
+        // when we have a Rx type and want to return antoher Rx type, use flatMap()
+        .flatMap(movieInfo -> {
+          Mono<List<Review>> reviewsMono = reviewService
+              .retrieveReviewsFlux(movieInfo.getMovieInfoId())
+              .collectList();
+          Mono<Movie> movieMono = reviewsMono
+              .map(reviewList -> new Movie(movieInfo, reviewList));
+
+          return movieMono;
+        })
+        .onErrorMap((ex) -> {
+          log.error("Error while retrieving a movie", ex);
+          return new MovieException(ex);
+        });
+  }
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
   //
   //  If we used map() instaed of flatMap(), our result would be of tyoe Flux<Mono<Movie>>
