@@ -105,6 +105,27 @@ public class ExceptionExample {
         .log();
   }
 
+  public Flux<String> exploreStackTrace(Exception e) {
+    return Flux.just("A", "B", "C")
+        .concatWith(Flux.error(e))
+        .onErrorMap(ex -> {
+          log.error("Exception is ", ex);
+          return new ReactorException(ex, ex.getMessage());
+        })
+        .log();
+  }
+
+  public Flux<String> exploreStackTraceCheckpoint(Exception e) {
+    return Flux.just("A", "B", "C")
+        .concatWith(Flux.error(e))
+        .checkpoint("errorSpot")
+        .onErrorMap(ex -> {
+          log.error("Exception is ", ex);
+          return new ReactorException(ex, ex.getMessage());
+        })
+        .log();
+  }
+
   //////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // doOnError: catches the exception, take an action when the Exception occurs.
