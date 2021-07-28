@@ -22,4 +22,49 @@ class ProgrammaticPublisherCreationExampleTest {
         .verifyComplete();
   }
 
+  @Test
+  void shouldCreateValues() {
+    var flux = subject.create().log();
+
+    StepVerifier.create(flux)
+        .expectNext("Luke", "Leia", "Han")
+        .verifyComplete();
+  }
+
+  @Test
+  void shouldCreateAsync() {
+    var flux = subject.createAsync().log();
+
+    StepVerifier.create(flux)
+        .expectNext("Luke", "Leia", "Han")
+        .verifyComplete();
+  }
+
+  @Test
+  void shouldCreateAsyncMultithreaded() {
+    var flux = subject.createAsyncMultithreaded().log();
+
+    StepVerifier.create(flux)
+        .expectNext("Luke", "Leia", "Han", "Luke", "Leia", "Han")
+        .verifyComplete();
+  }
+
+  @Test
+  void shouldCreateAMono() {
+    var mono = subject.createMono();
+
+    StepVerifier.create(mono)
+        .expectNext("Luke")
+        .verifyComplete();
+  }
+
+  @Test
+  void shouldHandle() {
+    var flux = subject.handle();
+
+    StepVerifier.create(flux)
+        .expectNext("FRODO", "MERRY", "PIPPIN")
+        .verifyComplete();
+  }
+
 }
