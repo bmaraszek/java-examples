@@ -9,6 +9,21 @@ public class TreeNode {
         this.data = data;
     }
 
+    /**
+     * Insert a value into a BST represented by this TreeNode
+     */
+    public void insert(int value) {
+        if(value < this.data) {
+            // go left
+            if(left == null) left = new TreeNode(value);
+            else left.insert(value);
+        } else {
+            // go right
+            if(right == null) right = new TreeNode(value);
+            else right.insert(value);
+        }
+    }
+
     @Override
     public String toString() {
         return String.format("TreeNode(%d)", data);
