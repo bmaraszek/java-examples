@@ -1,6 +1,5 @@
 package leetcode.examples.tree;
 
-import com.sun.source.tree.Tree;
 import org.assertj.core.util.Lists;
 
 import java.util.ArrayList;

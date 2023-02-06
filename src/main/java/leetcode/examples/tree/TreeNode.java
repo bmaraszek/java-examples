@@ -69,7 +69,7 @@ public class TreeNode {
         root.right = new TreeNode(15);
         root.left.left = new TreeNode(2);
         root.left.right = new TreeNode(5);
-        root.right.left = new TreeNode(16); // invalid
+        root.right.left = new TreeNode(9); // invalid
         root.right.right = new TreeNode(22);
         root.left.left.left = new TreeNode(1);
         root.right.left.right = new TreeNode(13);
