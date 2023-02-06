@@ -49,4 +49,30 @@ public class TreeNode {
         root.right.left.right = new TreeNode(8);
         return root;
     }
+
+    public static TreeNode aValidBST() {
+        TreeNode root = new TreeNode(10);
+        root.left = new TreeNode(5);
+        root.right = new TreeNode(15);
+        root.left.left = new TreeNode(2);
+        root.left.right = new TreeNode(5);
+        root.right.left = new TreeNode(13);
+        root.right.right = new TreeNode(22);
+        root.left.left.left = new TreeNode(1);
+        root.right.left.right = new TreeNode(13);
+        return root;
+    }
+
+    public static TreeNode anInvalidBST() {
+        TreeNode root = new TreeNode(10);
+        root.left = new TreeNode(5);
+        root.right = new TreeNode(15);
+        root.left.left = new TreeNode(2);
+        root.left.right = new TreeNode(5);
+        root.right.left = new TreeNode(16); // invalid
+        root.right.right = new TreeNode(22);
+        root.left.left.left = new TreeNode(1);
+        root.right.left.right = new TreeNode(13);
+        return root;
+    }
 }
