@@ -13,6 +13,16 @@ class NodeRandom {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                    //
+//  We'll use a hashmap to keep the nodes in order                                                                    //
+//  In the first pass, we'll allocate a map of (original_node : copied_node)                                          //
+//  In the second pass, we'll go through the hashmap in order and link every node                                     //
+//                                                                                                                    //
+//  Time complexity is O(n) - We need to pass through the list twice                                                  //
+//  Space complexity is O(n) - We make a copy containing N nodes                                                      //
+//                                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class DeepCopyLinkedListWithRandomPointer {
 
     public static void printList(NodeRandom node) {
