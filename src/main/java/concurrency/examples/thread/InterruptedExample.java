@@ -6,7 +6,7 @@ public class InterruptedExample {
         task.start();
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(50000);
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
@@ -38,7 +38,9 @@ class PrimeGenerator extends Thread {
 
     public boolean isPrime(long number) {
         for(int i = 2; i < number; i++) {
-            if(number % i == 0) return false;
+            if(number % i == 0) {
+                return false;
+            }
         }
         return true;
     }
