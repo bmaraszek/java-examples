@@ -1,9 +1,12 @@
 package leetcode.examples.stack;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.*;
 
+import static java.util.Comparator.comparingDouble;
 import static org.assertj.core.api.Assertions.assertThat;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,14 +26,45 @@ import static org.assertj.core.api.Assertions.assertThat;
 //                                                                                                                    //
 //  Return the number of car fleets that will arrive at the destination.                                              //
 //                                                                                                                    //
-//  Time complexity is O(n) because we go through the input once                                                      //
-//  Space complexity is O(n) because we put values on the stack                                                       //
+//  Solution: First, we're going to merge the two lists into a list of pairs (position, speed) and sort it            //
+//  by position. Then, we're going to go from right to left (highest to lowest position and for each car, calculate   //
+//  the time it arrives at the destination. If a car arrives at the destination faster than the car before it,        //
+//  it means that the cars must collide. We can remove the car that has collided from consideration.                  //
+//                                                                                                                    //
+//  Time complexity is O(n log n) because we are going to sort the cars by position                                   //
+//  Space complexity is O(n) because we'll create a separate List and a Stack                                         //
 //                                                                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class CarFleet {
 
+    @Getter
+    @AllArgsConstructor
+    public static class Car {
+        float position;
+        float speed;
+    }
+
     public static int carFleet(int target, List<Integer> positions, List<Integer> speed) {
-        return 0;
+        if(positions.size() == 1) return 1;
+
+        // combine two lists into one list of cars
+        List<Car> cars = new ArrayList<>(positions.size());
+        for(int i = 0; i < positions.size(); i ++) {
+            cars.add(new Car(positions.get(i), speed.get(i)));
+        }
+        Collections.sort(cars, comparingDouble(Car::getPosition));
+
+        // calculate the arrival times
+        Stack<Float> stack = new Stack<>();
+        for(int i = cars.size() - 1; i >= 0; i--) {
+            float currentTime = (target - cars.get(i).position) / cars.get(i).speed;
+            if(!stack.isEmpty() && currentTime <= stack.peek()) {
+                // NOP
+            } else {
+                stack.push(currentTime);
+            }
+        }
+        return stack.size();
     }
 
     @Test
