@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                                    //
-//  We'll put all numers in a HashSet.                                                                                //
+//  We'll put all numbers in a HashSet.                                                                                //
 //  Next, for every number, we'll search the HashSet for (target - N)                                                 //
 //                                                                                                                    //
 //  Time complexity is O(N) - we pass the array once                                                                  //
