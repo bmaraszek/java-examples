@@ -1,4 +1,4 @@
-package leetcode.examples.arraysAndHashing;
+package neetcode.examples.arraysAndHashing;
 
 import org.junit.jupiter.api.Test;
 

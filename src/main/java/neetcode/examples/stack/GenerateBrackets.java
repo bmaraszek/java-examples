@@ -1,4 +1,4 @@
-package leetcode.examples.stack;
+package neetcode.examples.stack;
 
 import org.junit.jupiter.api.Test;
 

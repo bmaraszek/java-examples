@@ -1,4 +1,4 @@
-package leetcode.examples.stack;
+package neetcode.examples.stack;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
